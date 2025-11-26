@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movie_app/core/configs/theme/app_theme.dart';
+import 'package:movie_app/presentation/splash/bloc/splash_cubit.dart';
 import 'package:movie_app/presentation/splash/pages/splash.dart';
 
 void main() {
@@ -15,10 +17,13 @@ class MyApp extends StatelessWidget {
     SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(statusBarColor: Colors.transparent),
     );
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: AppTheme.appTheme,
-      home: SplashPage(),
+    return BlocProvider(
+      create: (context) => SplashCubit()..appStarted(),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: AppTheme.appTheme,
+        home: SplashPage(),
+      ),
     );
   }
 }
