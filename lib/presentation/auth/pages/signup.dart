@@ -2,11 +2,18 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_app/common/helper/navigation/app_navigation.dart';
 import 'package:movie_app/core/configs/theme/app_colors.dart';
+import 'package:movie_app/data/auth/models/signup_req_params.dart';
+import 'package:movie_app/data/auth/repositories/auth.dart';
+import 'package:movie_app/data/auth/sources/auth_api_service.dart';
+import 'package:movie_app/domain/auth/usecases/signup.dart';
 import 'package:movie_app/presentation/auth/pages/signin.dart';
 import 'package:reactive_button/reactive_button.dart';
 
 class SignupPage extends StatelessWidget {
-  const SignupPage({super.key});
+  SignupPage({super.key});
+
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -39,18 +46,35 @@ class SignupPage extends StatelessWidget {
   }
 
   Widget _emailField() {
-    return TextField(decoration: InputDecoration(hintText: 'Email'));
+    return TextField(
+      controller: _emailController,
+      decoration: InputDecoration(hintText: 'Email'),
+    );
   }
 
   Widget _passwordField() {
-    return TextField(decoration: InputDecoration(hintText: 'Password'));
+    return TextField(
+      controller: _passwordController,
+      decoration: InputDecoration(hintText: 'Password'),
+    );
   }
 
   Widget _signupButton() {
     return ReactiveButton(
       title: 'Sign Up',
       activeColor: AppColors.primary,
-      onPressed: () async {},
+      onPressed: () async {
+        SignupUseCase(
+          authRepository: AuthRepositoryImpl(
+            authApiService: AuthApiServiceImpl(),
+          ),
+        ).call(
+          params: SignupReqParams(
+            email: _emailController.text,
+            password: _passwordController.text,
+          ),
+        );
+      },
       onSuccess: () {},
       onFailure: (error) {},
     );
