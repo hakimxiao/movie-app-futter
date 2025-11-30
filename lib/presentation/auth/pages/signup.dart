@@ -3,10 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:movie_app/common/helper/navigation/app_navigation.dart';
 import 'package:movie_app/core/configs/theme/app_colors.dart';
 import 'package:movie_app/data/auth/models/signup_req_params.dart';
-import 'package:movie_app/data/auth/repositories/auth.dart';
-import 'package:movie_app/data/auth/sources/auth_api_service.dart';
 import 'package:movie_app/domain/auth/usecases/signup.dart';
 import 'package:movie_app/presentation/auth/pages/signin.dart';
+import 'package:movie_app/service_locator.dart';
 import 'package:reactive_button/reactive_button.dart';
 
 class SignupPage extends StatelessWidget {
@@ -64,11 +63,7 @@ class SignupPage extends StatelessWidget {
       title: 'Sign Up',
       activeColor: AppColors.primary,
       onPressed: () async {
-        SignupUseCase(
-          authRepository: AuthRepositoryImpl(
-            authApiService: AuthApiServiceImpl(),
-          ),
-        ).call(
+        sl<SignupUseCase>().call(
           params: SignupReqParams(
             email: _emailController.text,
             password: _passwordController.text,
