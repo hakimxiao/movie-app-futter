@@ -1,12 +1,20 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:movie_app/common/helper/message/display_message.dart';
 import 'package:movie_app/common/helper/navigation/app_navigation.dart';
 import 'package:movie_app/core/configs/theme/app_colors.dart';
+import 'package:movie_app/data/auth/models/signin_req_params.dart';
+import 'package:movie_app/domain/auth/usecases/signin.dart';
 import 'package:movie_app/presentation/auth/pages/signup.dart';
+import 'package:movie_app/presentation/home/pages/home.dart';
+import 'package:movie_app/service_locator.dart';
 import 'package:reactive_button/reactive_button.dart';
 
 class SigninPage extends StatelessWidget {
-  const SigninPage({super.key});
+  SigninPage({super.key});
+
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +30,7 @@ class SigninPage extends StatelessWidget {
             SizedBox(height: 20),
             _passwordField(),
             SizedBox(height: 60),
-            _signinButton(),
+            _signinButton(context),
             SizedBox(height: 10),
             _signupText(context),
           ],
@@ -39,20 +47,41 @@ class SigninPage extends StatelessWidget {
   }
 
   Widget _emailField() {
-    return TextField(decoration: InputDecoration(hintText: 'Email'));
+    return TextField(
+      controller: _emailController,
+      decoration: InputDecoration(hintText: 'Email'),
+    );
   }
 
   Widget _passwordField() {
-    return TextField(decoration: InputDecoration(hintText: 'Password'));
+    return TextField(
+      controller: _passwordController,
+      decoration: InputDecoration(hintText: 'Password'),
+    );
   }
 
-  Widget _signinButton() {
+  Widget _signinButton(BuildContext context) {
     return ReactiveButton(
       title: 'Sign In',
       activeColor: AppColors.primary,
-      onPressed: () async {},
-      onSuccess: () {},
-      onFailure: (error) {},
+      onPressed: () async => sl<SigninUseCase>().call(
+        params: SigninReqParams(
+          email: _emailController.text,
+          password: _passwordController.text,
+        ),
+      ),
+      onSuccess: () async {
+        DisplayMessage.successMessage('Berhasil Signin 🚀', context);
+
+        await Future.delayed(const Duration(milliseconds: 900));
+
+        if (!context.mounted) return; // ⬅ wajib untuk menghindari warning
+
+        AppNavigator.pushAndRemove(context, HomePage());
+      },
+      onFailure: (error) {
+        DisplayMessage.errorMessage(error, context);
+      },
     );
   }
 

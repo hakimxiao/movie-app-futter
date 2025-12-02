@@ -1,10 +1,12 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:movie_app/common/helper/message/display_message.dart';
 import 'package:movie_app/common/helper/navigation/app_navigation.dart';
 import 'package:movie_app/core/configs/theme/app_colors.dart';
 import 'package:movie_app/data/auth/models/signup_req_params.dart';
 import 'package:movie_app/domain/auth/usecases/signup.dart';
 import 'package:movie_app/presentation/auth/pages/signin.dart';
+import 'package:movie_app/presentation/home/pages/home.dart';
 import 'package:movie_app/service_locator.dart';
 import 'package:reactive_button/reactive_button.dart';
 
@@ -28,7 +30,7 @@ class SignupPage extends StatelessWidget {
             SizedBox(height: 20),
             _passwordField(),
             SizedBox(height: 60),
-            _signupButton(),
+            _signupButton(context),
             SizedBox(height: 10),
             _signinText(context),
           ],
@@ -58,20 +60,30 @@ class SignupPage extends StatelessWidget {
     );
   }
 
-  Widget _signupButton() {
+  Widget _signupButton(BuildContext context) {
     return ReactiveButton(
       title: 'Sign Up',
       activeColor: AppColors.primary,
       onPressed: () async {
-        sl<SignupUseCase>().call(
+        await sl<SignupUseCase>().call(
           params: SignupReqParams(
             email: _emailController.text,
             password: _passwordController.text,
           ),
         );
       },
-      onSuccess: () {},
-      onFailure: (error) {},
+      onSuccess: () async {
+        DisplayMessage.successMessage('Berhasil Signup 🚀', context);
+
+        await Future.delayed(const Duration(milliseconds: 900));
+
+        if (!context.mounted) return; // ⬅ wajib untuk menghindari warning
+
+        AppNavigator.pushAndRemove(context, HomePage());
+      },
+      onFailure: (error) {
+        DisplayMessage.errorMessage(error, context);
+      },
     );
   }
 
