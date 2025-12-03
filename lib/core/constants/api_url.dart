@@ -1,7 +1,9 @@
 class ApiUrl {
   static const baseURL =
       'https://flutter-movie-app-be-production.up.railway.app/';
+  static const apiV = 'api/v1/';
 
-  static const signup = 'api/v1/auth/signup';
-  static const signin = 'api/v1/auth/signin';
+  static const signup = '${apiV}signup';
+  static const signin = '${apiV}signin';
+  static const trandingMovies = '${apiV}movie/trending';
 }
