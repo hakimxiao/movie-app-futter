@@ -5,5 +5,6 @@ class ApiUrl {
 
   static const signup = '${apiV}signup';
   static const signin = '${apiV}signin';
-  static const trandingMovies = '${apiV}movie/trending';
+  static const trendingMovies = '${apiV}movie/trending';
+  static const nowPlayingMovies = '${apiV}movie/nowplaying';
 }
