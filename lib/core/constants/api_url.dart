@@ -7,4 +7,5 @@ class ApiUrl {
   static const signin = '${apiV}signin';
   static const trendingMovies = '${apiV}movie/trending';
   static const nowPlayingMovies = '${apiV}movie/nowplaying';
+  static const popularTV = '${apiV}tv/popular';
 }
