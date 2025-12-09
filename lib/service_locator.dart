@@ -14,6 +14,7 @@ import 'package:movie_app/domain/movie/repositories/movie.dart';
 import 'package:movie_app/domain/movie/usecases/get_movie_trailer.dart';
 import 'package:movie_app/domain/movie/usecases/get_now_playing_movies.dart';
 import 'package:movie_app/domain/movie/usecases/get_recomendation_movies.dart';
+import 'package:movie_app/domain/movie/usecases/get_similar_movies.dart';
 import 'package:movie_app/domain/movie/usecases/get_trending_movies.dart';
 import 'package:movie_app/domain/tv/repositories/tv.dart';
 import 'package:movie_app/domain/tv/usecases/get_popular_tv.dart';
@@ -46,4 +47,5 @@ void setupServiceLocator() {
   sl.registerSingleton<GetRecomendationMoviesUseCase>(
     GetRecomendationMoviesUseCase(),
   );
+  sl.registerSingleton<GetSimilarMoviesUseCase>(GetSimilarMoviesUseCase());
 }
