@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:movie_app/common/bloc/generic_data_cubit.dart';
+import 'package:movie_app/common/bloc/generic_data_state.dart';
 import 'package:movie_app/common/widgets/movie/movie_card.dart';
-import 'package:movie_app/presentation/watch/bloc/Similar_movies_cubit.dart';
-import 'package:movie_app/presentation/watch/bloc/Similar_movies_state.dart';
+import 'package:movie_app/domain/movie/entities/movie.dart';
+import 'package:movie_app/domain/movie/usecases/get_similar_movies.dart';
+import 'package:movie_app/service_locator.dart';
 
 class SimilarMovies extends StatelessWidget {
   final int movieId;
@@ -11,14 +14,18 @@ class SimilarMovies extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => SimilarMoviesCubit()..getSimilarMovies(movieId),
-      child: BlocBuilder<SimilarMoviesCubit, SimilarMoviesState>(
+      create: (context) => GenericDataCubit()
+        ..getData<List<MovieEntity>>(
+          sl<GetSimilarMoviesUseCase>(),
+          params: movieId,
+        ),
+      child: BlocBuilder<GenericDataCubit, GenericDataState>(
         builder: (context, state) {
-          if (state is SimilarMoviesLoading) {
+          if (state is DataLoading) {
             return Center(child: CircularProgressIndicator());
           }
 
-          if (state is SimilarMoviesLoaded) {
+          if (state is DataLoaded) {
             return Column(
               children: [
                 Text(
@@ -31,17 +38,17 @@ class SimilarMovies extends StatelessWidget {
                   child: ListView.separated(
                     scrollDirection: Axis.horizontal,
                     itemBuilder: (context, index) {
-                      return MovieCard(movieEntity: state.movies[index]);
+                      return MovieCard(movieEntity: state.data[index]);
                     },
                     separatorBuilder: (context, index) => SizedBox(width: 10),
-                    itemCount: state.movies.length,
+                    itemCount: state.data.length,
                   ),
                 ),
               ],
             );
           }
 
-          if (state is FailureLoadedSimilarMovies) {
+          if (state is FailureLoadedData) {
             return Text(state.errorMessage);
           }
 

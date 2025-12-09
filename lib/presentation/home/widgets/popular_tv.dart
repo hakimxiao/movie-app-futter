@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:movie_app/common/bloc/generic_data_cubit.dart';
+import 'package:movie_app/common/bloc/generic_data_state.dart';
 import 'package:movie_app/common/widgets/tv/tv_card.dart';
-import 'package:movie_app/presentation/home/bloc/popular_tv_cubit.dart';
-import 'package:movie_app/presentation/home/bloc/popular_tv_state.dart';
+import 'package:movie_app/domain/tv/entities/tv.dart';
+import 'package:movie_app/domain/tv/usecases/get_popular_tv.dart';
+import 'package:movie_app/service_locator.dart';
 
 class PopularTv extends StatelessWidget {
   const PopularTv({super.key});
@@ -10,29 +13,31 @@ class PopularTv extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => PopularTvCubit()..getPopularTv(),
-      child: BlocBuilder<PopularTvCubit, PopularTvState>(
+      create: (context) =>
+          GenericDataCubit()
+            ..getData<List<TVEntity>>(sl<GetPopularTvUseCase>()),
+      child: BlocBuilder<GenericDataCubit, GenericDataState>(
         builder: (context, state) {
-          if (state is PopularTvLoading) {
+          if (state is DataLoading) {
             return Center(child: CircularProgressIndicator());
           }
 
-          if (state is PopularTvLoaded) {
+          if (state is DataLoaded) {
             return SizedBox(
               height: 300,
               child: ListView.separated(
                 scrollDirection: Axis.horizontal,
                 padding: EdgeInsets.symmetric(horizontal: 16),
                 itemBuilder: (context, index) {
-                  return TVCard(tvEntity: state.tv[index]);
+                  return TVCard(tvEntity: state.data[index]);
                 },
                 separatorBuilder: (context, index) => SizedBox(width: 10),
-                itemCount: state.tv.length,
+                itemCount: state.data.length,
               ),
             );
           }
 
-          if (state is FailureLoadedPopularTv) {
+          if (state is FailureLoadedData) {
             return Text(state.errorMessage);
           }
 
