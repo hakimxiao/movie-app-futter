@@ -1,5 +1,7 @@
 import 'package:dartz/dartz.dart';
+import 'package:movie_app/common/helper/mapper/keyword_mapper.dart';
 import 'package:movie_app/common/helper/mapper/tv_mapper.dart';
+import 'package:movie_app/core/models/keyword.dart';
 import 'package:movie_app/data/tv/models/tv.dart';
 import 'package:movie_app/data/tv/sources/tv.dart';
 import 'package:movie_app/domain/tv/repositories/tv.dart';
@@ -54,6 +56,24 @@ class TVRepositoryImpl extends TvRepository {
         var tvs = List.from(
           data['content'],
         ).map((item) => TvMapper.toEntity(TVModel.fromJson(item))).toList();
+
+        return Right(tvs);
+      },
+    );
+  }
+
+  @override
+  Future<Either> getKeywords(int tvId) async {
+    var returnedData = await sl<TVService>().getKeywords(tvId);
+
+    return returnedData.fold(
+      (error) {
+        return Left(error);
+      },
+      (data) {
+        var tvs = List.from(data['content'])
+            .map((item) => KeywordMapper.toEntity(KeywordModel.fromJson(item)))
+            .toList();
 
         return Right(tvs);
       },
