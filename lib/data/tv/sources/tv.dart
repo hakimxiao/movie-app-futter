@@ -9,6 +9,7 @@ abstract class TVService {
   Future<Either> getRecommendationTVs(int tvId);
   Future<Either> getSimilarTVs(int tvId);
   Future<Either> getKeywords(int tvId);
+  Future<Either> searchTv(String query);
 }
 
 class TVApiServiceImpl extends TVService {
@@ -51,6 +52,17 @@ class TVApiServiceImpl extends TVService {
   Future<Either> getKeywords(int tvId) async {
     try {
       var response = await sl<DioClient>().get('${ApiUrl.tv}$tvId/keywords');
+
+      return Right(response.data);
+    } on DioException catch (err) {
+      return Left(err.response!.data['message']);
+    }
+  }
+
+  @override
+  Future<Either> searchTv(String query) async {
+    try {
+      var response = await sl<DioClient>().get('${ApiUrl.search}tv/$query');
 
       return Right(response.data);
     } on DioException catch (err) {

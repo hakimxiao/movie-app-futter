@@ -8,4 +8,6 @@ abstract class TvRepository {
   Future<Either> getSimilarTVs(int tvId);
 
   Future<Either> getKeywords(int tvId);
+
+  Future<Either> searchTv(String query);
 }

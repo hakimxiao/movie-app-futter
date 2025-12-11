@@ -16,11 +16,13 @@ import 'package:movie_app/domain/movie/usecases/get_now_playing_movies.dart';
 import 'package:movie_app/domain/movie/usecases/get_recomendation_movies.dart';
 import 'package:movie_app/domain/movie/usecases/get_similar_movies.dart';
 import 'package:movie_app/domain/movie/usecases/get_trending_movies.dart';
+import 'package:movie_app/domain/movie/usecases/search_movie.dart';
 import 'package:movie_app/domain/tv/repositories/tv.dart';
 import 'package:movie_app/domain/tv/usecases/get_keywords.dart';
 import 'package:movie_app/domain/tv/usecases/get_popular_tv.dart';
 import 'package:movie_app/domain/tv/usecases/get_recommendation_tvs.dart';
 import 'package:movie_app/domain/tv/usecases/get_similar_tvs.dart';
+import 'package:movie_app/domain/tv/usecases/search_tv.dart';
 
 final sl = GetIt.instance;
 
@@ -56,4 +58,6 @@ void setupServiceLocator() {
   );
   sl.registerSingleton<GetSimilarTvsUseCase>(GetSimilarTvsUseCase());
   sl.registerSingleton<GetTvKeywordsUseCase>(GetTvKeywordsUseCase());
+  sl.registerSingleton<SearchMovieUseCase>(SearchMovieUseCase());
+  sl.registerSingleton<SearchTvUseCase>(SearchTvUseCase());
 }

@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:movie_app/common/helper/navigation/app_navigation.dart';
 import 'package:movie_app/common/widgets/appbar/appbar.dart';
 import 'package:movie_app/core/configs/assets/app_vectors.dart';
 import 'package:movie_app/presentation/home/widgets/category_text.dart';
 import 'package:movie_app/presentation/home/widgets/now_playing_movies.dart';
 import 'package:movie_app/presentation/home/widgets/popular_tv.dart';
 import 'package:movie_app/presentation/home/widgets/trendings_movies.dart';
+import 'package:movie_app/presentation/search/pages/search.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -15,6 +17,12 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       appBar: BasicAppbar(
         hideBack: true,
+        action: IconButton(
+          onPressed: () {
+            AppNavigator.push(context, SearchPage());
+          },
+          icon: Icon(Icons.search),
+        ),
         title: SvgPicture.asset(AppVectors.logo),
       ),
       body: SingleChildScrollView(
